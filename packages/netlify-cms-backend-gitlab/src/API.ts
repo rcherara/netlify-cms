@@ -207,8 +207,8 @@ export default class API {
   buildRequest = async (req: ApiRequest) => {
     const withRoot: ApiRequest = unsentRequest.withRoot(this.apiRoot)(req);
     const withAuthorizationHeaders: ApiRequest = await this.withAuthorizationHeaders(withRoot);
-    const withTimestamp: ApiRequest = unsentRequest.withTimestamp(withAuthorizationHeaders);
-    return withTimestamp;
+    const withNoStore: ApiRequest = unsentRequest.withNoStore(withAuthorizationHeaders);
+    return withNoStore;
   };
 
   request = async (req: ApiRequest): Promise<Response> => {
@@ -277,7 +277,6 @@ export default class API {
       const content = await this.request({
         url: `${this.repoURL}/repository/files/${encodeURIComponent(path)}/raw`,
         params: { ref: branch },
-        cache: 'no-store',
       }).then<Blob | string>(parseText ? this.responseToText : this.responseToBlob);
       return content;
     };
@@ -286,7 +285,7 @@ export default class API {
     return content;
   };
 
-  async readFileMetadata(path: string, sha: string) {
+  async readFileMetadata(path: string, sha: string | null | undefined) {
     const fetchFileMetadata = async () => {
       try {
         const result: GitLabCommit[] = await this.requestJSON({
@@ -520,7 +519,6 @@ export default class API {
       method: 'HEAD',
       url: `${this.repoURL}/repository/files/${encodeURIComponent(path)}`,
       params: { ref: branch },
-      cache: 'no-store',
     });
 
     const blobId = request.headers.get('X-Gitlab-Blob-Id') as string;
@@ -532,7 +530,6 @@ export default class API {
       method: 'HEAD',
       url: `${this.repoURL}/repository/files/${encodeURIComponent(path)}`,
       params: { ref: branch },
-      cache: 'no-store',
     })
       .then(() => true)
       .catch(error => {

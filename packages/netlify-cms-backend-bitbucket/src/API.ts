@@ -215,7 +215,7 @@ export default class API {
   }
 
   buildRequest = (req: ApiRequest) => {
-    return flow([unsentRequest.withRoot(this.apiRoot), unsentRequest.withTimestamp])(req);
+    return flow([unsentRequest.withRoot(this.apiRoot), unsentRequest.withNoStore])(req);
   };
 
   request = (req: ApiRequest): Promise<Response> => {
@@ -295,7 +295,7 @@ export default class API {
     return content;
   };
 
-  async readFileMetadata(path: string, sha: string) {
+  async readFileMetadata(path: string, sha: string | null | undefined) {
     const fetchFileMetadata = async () => {
       try {
         const { values }: { values: BitBucketCommit[] } = await this.requestJSON({
