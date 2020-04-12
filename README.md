@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8329bf8e-ba27-493d-afae-c108960f8862/deploy-status)](https://app.netlify.com/sites/rcherara-demo-netlify-with-cms/deploys)
+
 # Netlify CMS
 
 A CMS for static site generators. Give users a simple way to edit
